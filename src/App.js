@@ -1,25 +1,47 @@
 import React from 'react';
-import logo from './logo.svg';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
+import UserPage from './pages/user_page';
+import SignInAndSignUP from './component/sign-in_and_sign_up/sign-in_and_sign-up';
 import './App.css';
+import SignInAndSignUp from './component/sign-in_and_sign_up/sign-in_and_sign-up';
 
-function App() {
+const userPage = (props)=>{
+  const {currentUser,currentBio} = props.location.state
+  console.log('APP',currentUser,currentBio)
+  let content = {}
+        content['bio'] = currentBio
+        content['tweets'] = []
+
+        console.log('content',JSON.stringify(content))
+        if (sessionStorage.getItem(`${currentUser}`)) {
+          return <UserPage value={currentUser} />
+          } 
+        else {
+            if (currentUser === '' ) {
+              return <SignInAndSignUp/>
+            } else {
+                sessionStorage.setItem(`${currentUser}`, JSON.stringify(content));
+              return  <UserPage value={currentUser} />
+            }
+
+        }
+  //return <UserPage value={props.location.state} />
+}
+
+const App=()=> {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router >
+      <Switch>
+        <Route exact path='/'><SignInAndSignUP/></Route>
+        <Route exact path='/userPage' component={userPage}/>
+      </Switch>
+      {/*  */}
+      
+    </Router>
   );
 }
 

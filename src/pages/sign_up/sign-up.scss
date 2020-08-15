@@ -1,0 +1,29 @@
+.sign-up{
+    width: 60vw;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px 10px;
+    border: 2px solid black;
+    
+    .form{
+        width: inherit;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 20px;
+        .text{
+            padding-bottom: 10px;
+        }
+        
+        .button{
+            margin: auto;
+            width: 250px;
+            border-color: lime;
+            color: black;
+            font-size: 19px;
+            
+        }
+    }
+
+}

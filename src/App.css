@@ -1,5 +1,12 @@
 .App {
   text-align: center;
+  margin: auto auto;
+  box-shadow: 2px 2px 3px  3px rgba(51, 11, 11, 0.842);
+  height: 95vh;
+  width: 80vw;
+  justify-content: center;
+  margin-top: 20px;
+  overflow: auto;
 }
 
 .App-logo {
@@ -7,11 +14,6 @@
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
 
 .App-header {
   background-color: #282c34;
