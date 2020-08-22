@@ -4,7 +4,7 @@ import UserContent from '../component/user_content/user_content';
 
 
 
-const UserPage = (props)=>{
+const UserPage = ()=>{
     const [changes,setChanges]= React.useState(false);
 
     const handleChange = ()=>{
@@ -14,12 +14,12 @@ const UserPage = (props)=>{
     const revertChange=()=>{
         setChanges(false);
     }
-    console.log('USER PAGE',props);
+    console.log('USER PAGE',changes);
     return(
     <div className="App">
-        <UserHeader changes={handleChange} {...props} />
+        <UserHeader handleChange={handleChange}/>
         <br/>
-        <UserContent changes={changes} revertChange={revertChange}  {...props}/>
+        <UserContent revertChange={revertChange} />
     </div>
     );
 }

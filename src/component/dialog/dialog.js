@@ -8,43 +8,66 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import Fab from '@material-ui/core/Fab';
+import {setTweets} from '../../redux/user/user.action';
+import axios from 'axios';
+import {connect} from 'react-redux';
 
+class TweetDialog extends React.Component{
+  constructor(){
+    super();
+    this.state={
+      open:false,
+      newTweet:''
+    }
+  }
+    
 
-const TweetDialog = ({value,changes})=>{
-    const [open, setOpen] = React.useState(false);
-    const [newTweet,setTweet] = React.useState('');
-
-    const handleClickOpen = () => {
-        setOpen(true);
+    handleClickOpen = () => {
+        this.setState({open:true});
     };
 
-    const handleClose = () => {
-        setOpen(false);
+    handleClose = () => {
+      this.setState({open:false});
     };
-    const handleSubmit = ()=>{
-        setTweet('');
+    handleSubmit = async ()=>{
+      this.setState({newTweet:''});
+      console.log('newTweet',this.state.newTweet)
         //setting Time value
         let time = Date(Date.now());
         let d =time.lastIndexOf(':')+3;
         time = time.substring(0,d)
+        const that =this
         //updating user
-        let user = JSON.parse(sessionStorage.getItem(value))
+        //let user = JSON.parse(sessionStorage.getItem(value))
+        let user=that.props.userData
         let createdTweet = {}
-        createdTweet['tweet']=newTweet;
+        createdTweet['tweet']=this.state.newTweet;
         createdTweet['time'] = time;
-        user.tweets.push(createdTweet)
-        sessionStorage.setItem(`${value}`,JSON.stringify(user))
-        changes();
-        console.log('changes called from dialog');
-        setOpen(false);
+        user.push(createdTweet);
+        console.log('user dialog',user,typeof(user))
+        await axios.post(('https://postb.in/1598077816034-6479108585044'),
+          createdTweet
+        ).then(
+        that.props.receiveTweet({
+          tweets: user
+        })
+        )
+        .catch(error=>{console.log(error)})
+        // user.tweets.push(createdTweet)
+        // sessionStorage.setItem(`${value}`,JSON.stringify(user))
+        // changes();
+        // console.log('changes called from dialog');
+        this.props.handleChange()
+        this.setState({open:false});
     };
+    render(){
     return(
         <div className='tweet-button'>
-            <Fab variant="extended" onClick={handleClickOpen}>
+            <Fab variant="extended" onClick={this.handleClickOpen}>
                 <TwitterIcon style={{'paddingRight':'2px'}}  />
                 new tweet
             </Fab>
-            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Tweet</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -58,20 +81,29 @@ const TweetDialog = ({value,changes})=>{
             type="text"
             variant="outlined"
             fullWidth
-            onChange={(e)=>setTweet(e.target.value)}
-            value={newTweet}
+            onChange={(e)=>this.setState({newTweet: e.target.value})}
+            value={this.state.newTweet}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={this.handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleSubmit} color="primary">
+          <Button onClick={this.handleSubmit} color="primary">
             Tweet
           </Button>
         </DialogActions>
       </Dialog>
         </div>
     );
+    }
 }
-export default TweetDialog;
+
+const mapStateToProps=state=>({
+  userData:state.Tweets
+})
+const mapDispatchToProps = dispatch=>({
+  receiveTweet:tweet=>dispatch(setTweets(tweet))
+})
+
+export default connect(mapStateToProps,mapDispatchToProps)(TweetDialog);

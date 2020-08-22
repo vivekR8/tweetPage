@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
       },
   }));
 
-  const Card = ({heading,content})=>{
+  const Card = ({tweet})=>{
     
     const classes = useStyles();
 
@@ -28,11 +28,11 @@ const useStyles = makeStyles((theme) => ({
           <ListItemAvatar style={{'paddingRight':'4px'}}>
             <Avatar 
             className={classes.large}
-            src={`https://picsum.photos/seed/${heading}/200/300`}
+            src={`https://picsum.photos/seed/${tweet.tweet}/200/300`}
             />
             
           </ListItemAvatar>
-          <ListItemText primary={heading} secondary={content} />
+          <ListItemText primary={tweet.tweet} secondary={tweet.time} />
         </ListItem>
         </List>
       );

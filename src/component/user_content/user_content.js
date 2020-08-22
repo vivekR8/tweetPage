@@ -1,40 +1,59 @@
-import React from 'react';
+import React, { Component } from 'react';
+import{connect} from 'react-redux';
+//import {increment} from '../../redux/user/user.action';
 import Card from '../card/card';
 
 class UserContent extends React.Component{
     constructor(){
         super();
+
         this.state={
-            cardValue:null,
+            showTweets:null
         }
     }
 
-    static getDerivedStateFromProps(prevProps){
-    console.log(prevProps)
-    let store = (JSON.parse(sessionStorage.getItem(prevProps.value))).tweets
-    prevProps.revertChange()
-    return {cardValue:store}
+    // static getDerivedStateFromProps(props){
+    // console.log("GDSFP",props.tweets)
+    
+    // return {showTweets:props.tweets}
 
-    }
-
-    // // componentDidUpdate(){
-    // this.setState({cardValue:(JSON.parse(sessionStorage.getItem(this.props.value))).tweets});
-    // this.props.changes();
-    // console.log('user content cdm',this.props);
     // }
+    
+    
+
+    componentDidUpdate(){
+        const {showTweets}=this.state
+        console.log('render called')
+        if(showTweets===null){
+            this.setState({showTweets:this.props.tweets})
+
+        }
+        else if(showTweets.length!==this.props.tweets.length){
+        this.setState({showTweets:this.props.tweets})
+        }
+        this.props.revertChange()
+    }
     render(){
-        console.log('user content render',this.props);
+    const {showTweets}=this.state;
+    console.log('tweetssss',this.props.tweets,'state',showTweets);
 return(
     <div>
-    {   (this.state.cardValue===null)?(<p>No recent tweets</p>):
+    {   (showTweets && showTweets.length > 0)?
+    (//<p>here are your tweets</p>
+        showTweets.map(item=>(<Card tweet={item}/>))
+        ):
             (
-            this.state.cardValue.reverse().map(item => 
-           <Card heading={item.tweet} content={item.time} />
-            ) )
+                <p>{showTweets}</p>
+            )
     }
         
     </div>
 );
 }
 }
-export default UserContent;
+const mapStateToProps = state =>({
+    tweets:state.Tweets
+})
+
+
+export default connect(mapStateToProps)(UserContent);
