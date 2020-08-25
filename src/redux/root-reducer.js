@@ -1,7 +1,7 @@
 const INITIAL_STATE = {
     User:'',
     Bio:'',
-    Tweets:[],
+    Tweets:'',
 }
 const currentUser = (state = INITIAL_STATE,action)=>{
     console.log('reducer',action.payload)

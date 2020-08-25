@@ -10,6 +10,7 @@ import TwitterIcon from '@material-ui/icons/Twitter';
 import Fab from '@material-ui/core/Fab';
 import {setTweets} from '../../redux/user/user.action';
 import axios from 'axios';
+import {API} from '../../utils/API';
 import {connect} from 'react-redux';
 
 class TweetDialog extends React.Component{
@@ -37,26 +38,21 @@ class TweetDialog extends React.Component{
         let d =time.lastIndexOf(':')+3;
         time = time.substring(0,d)
         const that =this
-        //updating user
-        //let user = JSON.parse(sessionStorage.getItem(value))
-        let user=that.props.userData
+        
         let createdTweet = {}
         createdTweet['tweet']=this.state.newTweet;
         createdTweet['time'] = time;
-        user.push(createdTweet);
-        console.log('user dialog',user,typeof(user))
-        await axios.post(('https://postb.in/1598077816034-6479108585044'),
+        console.log('user dialog',createdTweet,typeof(user))
+        await axios.post(('/'+API),
           createdTweet
-        ).then(
+        )
+        .then(response=>
         that.props.receiveTweet({
-          tweets: user
+          tweets: response.data
         })
         )
         .catch(error=>{console.log(error)})
-        // user.tweets.push(createdTweet)
-        // sessionStorage.setItem(`${value}`,JSON.stringify(user))
-        // changes();
-        // console.log('changes called from dialog');
+        
         this.props.handleChange()
         this.setState({open:false});
     };

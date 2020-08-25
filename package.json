@@ -24,7 +24,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  
+  "proxy": "https://postb.in",
+
   "eslintConfig": {
     "extends": "react-app"
   },

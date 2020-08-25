@@ -2,48 +2,51 @@ import React, { Component } from 'react';
 import{connect} from 'react-redux';
 //import {increment} from '../../redux/user/user.action';
 import Card from '../card/card';
+import {API} from '../../utils/API'
+import axios from 'axios';
 
 class UserContent extends React.Component{
     constructor(){
         super();
 
         this.state={
-            showTweets:null
+            showTweets:[],
+            reqId:''
         }
     }
 
-    // static getDerivedStateFromProps(props){
-    // console.log("GDSFP",props.tweets)
-    
-    // return {showTweets:props.tweets}
-
-    // }
+ 
     
     
 
-    componentDidUpdate(){
-        const {showTweets}=this.state
-        console.log('render called')
-        if(showTweets===null){
-            this.setState({showTweets:this.props.tweets})
-
+    async componentDidUpdate(){
+        const {showTweets,reqId}=this.state
+        const {tweets,revertChange} =this.props
+        let blankArray=[...showTweets];
+        console.log('request called')
+        await axios.get(`/api/bin/${API}/req/${tweets}`)
+        .then(response=>{console.log(response,'response',reqId)
+       
+        if(reqId!==tweets){
+        console.log('second statement called',typeof(reqId),'tweets',typeof(tweets))
+        this.setState({showTweets:blankArray})
+        blankArray.push(response.data.body)
+        this.setState({reqId:tweets},()=>{console.log('reqid',reqId)})
         }
-        else if(showTweets.length!==this.props.tweets.length){
-        this.setState({showTweets:this.props.tweets})
-        }
-        this.props.revertChange()
+    }).catch(error=>console.log(error))
+        revertChange()
     }
     render(){
     const {showTweets}=this.state;
-    console.log('tweetssss',this.props.tweets,'state',showTweets);
 return(
     <div>
-    {   (showTweets && showTweets.length > 0)?
+    {   (showTweets.length>0)?
     (//<p>here are your tweets</p>
-        showTweets.map(item=>(<Card tweet={item}/>))
+        showTweets.map(item=>(<Card tweet={item}/>
+          ))
         ):
             (
-                <p>{showTweets}</p>
+                <p>No Tweet Available</p>
             )
     }
         
